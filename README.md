@@ -19,3 +19,7 @@ Common command line options:
 * `-o <path>` - specifies the output directory for the repro. Can be a relative path to the current directory.
 * `-f` - force overwrite the repro directory. Otherwise if the directory already exists the tool will fail.
 * `--project <project name>` - useful if there are multiple projects using illink in the binlog. Specify the name of the project for which the repro should be created. 
+
+## Privacy considerations
+
+If you're planning to share the repro with others (or even publicly), please be aware that the repro directory will contain all of the compiled assemblies of your application (`.dll`) and all of trimmer command line customizations. Make sure that these don't contain information you don't want to share.
