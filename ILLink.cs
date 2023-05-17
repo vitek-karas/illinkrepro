@@ -1,4 +1,6 @@
-﻿namespace illinkrepro
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace illinkrepro
 {
     internal class ILLink
     {
@@ -47,6 +49,11 @@
         public record SearchDirectory(string Path) : Argument
         {
             public override string ToString() => $"-d {Path}";
+        }
+
+        public record CustomStep(string Prefix, string Path) : Argument
+        {
+            public override string ToString() => $"--custom-step \"{Prefix},{Path}\"";
         }
 
         readonly string _workingPath;
@@ -134,6 +141,12 @@
                         yield return new LinkAttributes(ToPath(lineParts[1])); break;
                     case "-d":
                         yield return new SearchDirectory(ToPath(lineParts[1])); break;
+                    case "--custom-step":
+                        if (ParseCustomStep(lineParts[1], out var customStep))
+                            yield return customStep;
+                        else
+                            goto default;
+                        break;
                     default:
                         yield return new UnknownArgument(string.Join(' ', lineParts)); break;
                 }
@@ -166,6 +179,21 @@
 
             if (start < line.Length)
                 yield return line[start..];
+        }
+
+        bool ParseCustomStep(string input, [NotNullWhen(true)] out CustomStep? customStep)
+        {
+            input = input.Trim('"');
+            int index;
+
+            if ((index = input.LastIndexOf(',')) >= 0)
+            {
+                customStep = new CustomStep(input.Substring(0, index), ToPath(input.Substring(index + 1)));
+                return true;
+            }
+
+            customStep = null;
+            return false;
         }
 
         string ToPath(string v)
