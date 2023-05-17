@@ -165,6 +165,10 @@ namespace illinkrepro
                         reproArgs.Add(searchDirectory with { Path = CopyDirectoryToInput(searchDirectory.Path) });
                         break;
 
+                    case ILLink.CustomStep customStep:
+                        reproArgs.Add(customStep with { Path = CopyFileToInput(customStep.Path) });
+                        break;
+
                     default:
                         reproArgs.Add(arg);
                         break;
