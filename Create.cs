@@ -146,7 +146,7 @@ namespace illinkrepro
                         if (File.Exists(root.AssemblyPath))
                             reproArgs.Add(root with { AssemblyPath = CopyFileToInput(root.AssemblyPath) });
                         else
-                            reproArgs.Add(root);
+                            reproArgs.Add(root with { AssemblyPath = Path.GetFileName(root.AssemblyPath) });
                         break;
 
                     case ILLink.Out outArg:
