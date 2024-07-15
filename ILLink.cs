@@ -123,7 +123,7 @@
                 switch (lineParts[0])
                 {
                     case "-a":
-                        yield return new Root(ToPath(lineParts[1]), lineParts.Length > 2 ? lineParts[2] : null); break;
+                        yield return CreateRoot(lineParts[1], lineParts.Length > 2 ? lineParts[2] : null); break;
                     case "-reference":
                         yield return new Reference(ToPath(lineParts[1])); break;
                     case "-out":
@@ -166,6 +166,23 @@
 
             if (start < line.Length)
                 yield return line[start..];
+        }
+
+        Root CreateRoot(string assembly, string? mode)
+        {
+            assembly = assembly.Trim('"');
+            if (File.Exists(assembly))
+            {
+                return new Root(ToPath(assembly), mode);
+            }
+
+            string assemblyPath = Path.Combine(_workingPath, assembly);
+            if (File.Exists(assemblyPath))
+            {
+                return new Root(ToPath(assemblyPath), mode);
+            }
+
+            return new Root(assembly, mode);
         }
 
         string ToPath(string v)

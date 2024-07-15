@@ -143,10 +143,26 @@ namespace illinkrepro
                         break;
 
                     case ILLink.Root root:
-                        if (File.Exists(root.AssemblyPath))
-                            reproArgs.Add(root with { AssemblyPath = CopyFileToInput(root.AssemblyPath) });
-                        else
+                        {
+                            string assemblyPath = root.AssemblyPath;
+                            if (File.Exists(assemblyPath))
+                            {
+                                reproArgs.Add(root with { AssemblyPath = CopyFileToInput(assemblyPath) });
+                                break;
+                            }
+                            
+                            if (!assemblyPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                            {
+                                assemblyPath = assemblyPath + ".dll";
+                                if (File.Exists(assemblyPath))
+                                {
+                                    reproArgs.Add(root with { AssemblyPath = CopyFileToInput(assemblyPath) });
+                                    break;
+                                }
+                            }
+
                             reproArgs.Add(root);
+                        }
                         break;
 
                     case ILLink.Out outArg:
