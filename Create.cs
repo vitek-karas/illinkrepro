@@ -161,7 +161,7 @@ namespace illinkrepro
                                 }
                             }
 
-                            reproArgs.Add(root);
+                            reproArgs.Add(root with { AssemblyPath = Path.GetFileName(root.AssemblyPath) });
                         }
                         break;
 
